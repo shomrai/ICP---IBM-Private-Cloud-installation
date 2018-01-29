@@ -1,5 +1,5 @@
 ﻿# For 2018 IL - ICP BP enablement 2018
-# File: Script-provision.sh
+# File: InstallICP-Provision_EE
 #   by EITAN SHOMRAI
 # ==> Run before provision demo.ibmdemos.com Ubuntu base images
 # Install ICP-EE 2.1.0
