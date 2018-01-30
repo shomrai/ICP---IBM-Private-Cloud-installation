@@ -1,7 +1,7 @@
 # For 2018 IL - ICP BP enablement 2018
-# File: Install-script -after- provision.sh
-#   by EITAN SHOMRAI
-# =====> Run after provision in demo.ibmdemos.com 
+# File: InstallICP_after_provision
+# Written by EITAN SHOMRAI
+# =====> Run after provision in demo.ibmdemos.com cloud
 
 # SET PARAMS
   USER=ibm
@@ -63,6 +63,7 @@ ansible_user: ibm
 ansible_become: true
 ansible_become_password: IBMDem0s!
 ansible_ssh_pass: IBMDem0s!
+sudo ufw disable
 
 NEW_CONFIG
 
@@ -72,9 +73,9 @@ If you use a non-administrator account with sudo privileges to connect to the no
 If you run sudo with a password, you must set ansible_become_password to the value of your non-root (sudo user) password
 NOTE
 
-# Firewall...
-  sudo ufw status
-
+# Firewall
+  sudo ufw disable
+  
 cat <<NOTE
 *** INSTALL STARTED. You have to wait ~40 minutes ***
 NOTE
@@ -84,5 +85,3 @@ docker run --net=host -e LICENSE=accept -v $(pwd):/installer/cluster ibmcom/icp-
 cat <<NOTE
 *** INSTALL ENDED ***
 NOTE
-
-
