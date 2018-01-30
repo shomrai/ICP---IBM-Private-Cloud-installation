@@ -11,10 +11,6 @@
   SHOST=`hostname -s`
   LHOST=`hostname -f`
   NFS_HOST=169.47.126.115
-# Copy some files:
-  scp -P2222 $USER@$NFS_HOST:/opt/icp/IBM_Cloud_CLI_0.6.4_amd64.tar.gz .
-  scp -P2222 $USER@$NFS_HOST:/opt/icp/icp-linux-amd64 .
-  scp -P2222 $USER@$NFS_HOST:/opt/icp/kubectl .
 
 # Network setup
 # Presume that Configured static IP in /etc/network/interfaces.
