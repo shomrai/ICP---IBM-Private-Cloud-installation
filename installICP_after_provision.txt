@@ -1,7 +1,7 @@
 # For 2018 IL - ICP BP enablement 2018
-# File: Install-script -after- provision.sh
-#   by EITAN SHOMRAI
-# =====> Run after provision in demo.ibmdemos.com 
+# File: InstallICP_after_provision
+# Written by EITAN SHOMRAI
+# =====> Run after provision in demo.ibmdemos.com cloud
 
 # SET PARAMS
   USER=ibm
@@ -11,10 +11,6 @@
   SHOST=`hostname -s`
   LHOST=`hostname -f`
   NFS_HOST=169.47.126.115
-# Copy some files:
-  scp -P2222 $USER@$NFS_HOST:/opt/icp/IBM_Cloud_CLI_0.6.4_amd64.tar.gz .
-  scp -P2222 $USER@$NFS_HOST:/opt/icp/icp-linux-amd64 .
-  scp -P2222 $USER@$NFS_HOST:/opt/icp/kubectl .
 
 # Network setup
 # Presume that Configured static IP in /etc/network/interfaces.
@@ -69,17 +65,22 @@ ansible_become_password: IBMDem0s!
 ansible_ssh_pass: IBMDem0s!
 
 NEW_CONFIG
+
 cat <<NOTE
 NOTE:
 If you use a non-administrator account with sudo privileges to connect to the nodes, set the ansible_user to the user name and ansible_become to true
 If you run sudo with a password, you must set ansible_become_password to the value of your non-root (sudo user) password
 NOTE
 
-# Firewall...
-  sudo ufw status
+# Firewall
+  sudo ufw disable
+  
+cat <<NOTE
+*** INSTALL STARTED. You have to wait ~40 minutes ***
+NOTE
 
-echo "*** INSTALL STARTED. You have to wait ~30 minutes ***"
 date
 docker run --net=host -e LICENSE=accept -v $(pwd):/installer/cluster ibmcom/icp-inception:2.1.0-ee install
-echo "*** INSTALL ENDED. Took ~30 minutes? ***"
-
+cat <<NOTE
+*** INSTALL ENDED ***
+NOTE
