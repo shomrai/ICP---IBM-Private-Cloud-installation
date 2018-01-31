@@ -1,5 +1,2 @@
-#!/bin/bash
-echo File: $0
 wget https://raw.githubusercontent.com/shomrai/script/master/provision_ubuntu_16.04.txt
 wget https://raw.githubusercontent.com/shomrai/script/master/installICP_after_provision.txt
-ls -al
