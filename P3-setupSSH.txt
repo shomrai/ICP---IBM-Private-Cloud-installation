@@ -1,0 +1,25 @@
+# For 2018 IL - ICP BP enablement 2018 - PART #3 - RUN as regular user (ibm)
+# Setup passwordless SSH for user with root access - written by Eitan Shomrai
+
+  USER=ibm
+  MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
+  HOST_IP=`hostname -I|cut -d " " -f2`
+  PORT=2222
+  SHOST=`hostname -s`
+  LHOST=`hostname -f`
+  NFS_HOST=169.47.126.115
+
+# Setup Passwordless SSH
+  rm -rf /home/ibm/.ssh  && sudo rm -rf /root/.ssh
+  mkdir  /home/ibm/.ssh && sudo mkdir  /root/.ssh
+
+  ssh-keygen -b 4096 -t rsa -f ~/.ssh/master.id_rsa -N "" ;
+  ssh -p $PORT  -t ibm@$MYCLUSTER_IP sudo mkdir -p /root/.ssh
+  sudo scp -P $PORT ~/.ssh/master.id_rsa.pub ibm@$MYCLUSTER_IP:~/.ssh/master.id_rsa.pub
+  ssh -p $PORT  -t ibm@$MYCLUSTER_IP  'cat ~/.ssh/master.id_rsa.pub | sudo tee -a /root/.ssh/authorized_keys'
+
+# Check passwordless root access:
+  sudo ssh -p $PORT -i  ~/.ssh/master.id_rsa  $MYCLUSTER_IP id
+echo "QUIZ:  What the above command does?"
+
+#  END PART #3
