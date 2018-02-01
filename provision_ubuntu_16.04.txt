@@ -40,8 +40,6 @@ sudo chsh -s /bin/bash ibm
   
 # Add our user to docker group
   sudo usermod -aG docker $USER
-  
-#  su - $USER
 
 # load ICP images ~20 minutes
   tar xf /opt/icp/ibm-cloud-private-x86_64-2.1.0.tar.gz  -O | sudo docker load
