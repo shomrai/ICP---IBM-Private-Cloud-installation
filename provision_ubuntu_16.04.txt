@@ -1,6 +1,5 @@
-﻿# For 2018 IL - ICP BP enablement 2018
-# Provision Ubuntu Base image for ICP_EE - written by Eitan Shomrai
-# Install ICP-EE 2.1.0
+# For 2018 IL - ICP BP enablement 2018
+# Provision Ubuntu Base image for Install ICP-EE 2.1.0 - written by Eitan Shomrai
 # Single node (All in one) and minimal configuration (no HA/LDAP)
 
 # Set bash
