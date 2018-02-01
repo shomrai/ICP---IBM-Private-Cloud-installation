@@ -1,0 +1,81 @@
+# For 2018 IL - ICP BP enablement 2018 - PART #4 START
+#  ICP install steps - written by Eitan Shomrai
+
+# SET PARAMS
+  USER=ibm
+  PASSWD='IBMDem0s!'
+  MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
+  HOST_IP=`hostname -i`
+  PORT=2222
+  SHOST=`hostname -s`
+  LHOST=`hostname -f`
+  NFS_HOST=169.47.126.115
+  INSTALLDIR=/opt/ibm-cloud-private-2.1.0
+
+# Re-set the ICP cluster data:
+  sudo rm -rf $INSTALLDIR && mkdir $INSTALLDIR  && cd $INSTALLDIR
+
+# Extract cluster setup files
+  sudo docker run -v $(pwd):/data -e LICENSE=accept ibmcom/icp-inception:2.1.0-ee cp -r cluster /data
+  sudo chown -R ibm.ibm cluster && cd cluster
+# ??? is it neccessary ???
+#  mkdir images
+#  cp /opt/icp/ibm-cloud-private-x86_64-2.1.0.tar.gz images
+
+# Configure ICP cluster: hosts, config.yaml and ssh_key files
+# Copy the private KEY to the cluster node(s):
+  cp -f ~/.ssh/master.id_rsa ssh_key
+
+# Test SSH again
+  sudo cp -f ~/.ssh/master.id_rsa ssh_key || exit
+
+  sudo ssh -p $PORT  -i  ../cluster/ssh_key root@$MYCLUSTER_IP  id
+echo "QUIZ:  What the above command does?"
+
+# hosts file
+sudo cat > hosts  <<NEW_HOSTS
+[master]
+$MYCLUSTER_IP ansible_ssh_port=$PORT
+
+[worker]
+$MYCLUSTER_IP ansible_ssh_port=$PORT
+
+[proxy]
+$MYCLUSTER_IP ansible_ssh_port=$PORT
+
+NEW_HOSTS
+
+# config.yaml
+cat >> config.yaml <<NEW_CONFIG
+
+cluster_access_ip: $MYCLUSTER_IP
+
+# Ansible params
+ansible_user: $USER
+ansible_become: true
+ansible_become_password: $PASSWD
+ansible_ssh_pass: $PASSWD
+
+NEW_CONFIG
+
+cat <<NOTE
+NOTE:
+1. As port is not standard (22) ansible _ssh_port param was needed.
+2. As we use a non-administrator account with sudo privileges to connect to the nodes, need to set the ansible_user to the user name and ansible_become to true.
+3.  As we run sudo with a password, must set ansible_become_password to the non-root (sudo user => ibm) password
+NOTE
+
+# Firewall
+  sudo ufw disable
+
+cat <<NOTE
+*** INSTALL STARTED. You have to wait ~40 minutes ***
+NOTE
+
+date
+sudo docker run --net=host -e LICENSE=accept -v $(pwd):/installer/cluster ibmcom/icp-inception:2.1.0-ee install
+cat <<NOTE
+*** INSTALL ENDED ***
+NOTE
+
+# For 2018 IL - ICP BP enablement 2018 - PART #4 END
