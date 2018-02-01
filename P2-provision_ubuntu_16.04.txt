@@ -1,0 +1,53 @@
+# For 2018 IL - ICP BP enablement 2018 - PART #2 START - RUN AS ROOT
+# Provision Ubuntu Base image for ICP-EE 2.1.0 - written by Eitan Shomrai
+# Single node (All in one) and minimal configuration (no HA/LDAP)
+# SET=
+  USER=ibm
+  MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
+  HOST_IP=`hostname -I|cut -d " " -f2`
+  PORT=2222
+  SHOST=`hostname -s`
+  LHOST=`hostname -f`
+  NFS_HOST=169.47.126.115
+
+# Assume that ICP images are already LOADED
+
+# Add the $USER to the docker group and set its shell to bash
+  chsh -s /bin/bash $USER
+  usermod -aG docker $USER
+
+# Ubuntu software needed for ICP
+  apt-get -y install ntp  openssh-server  python  python-pip
+
+# Ubuntu system tweaks needed for ICP:
+# maximum memory map count and ip_local_port_range parameters
+  sysctl -w vm.max_map_count=262144
+  sysctl -w net.ipv4.ip_local_port_range="10240  60999"
+  egrep -iv 'vm.max_map_count|net.ipv4.ip_local_port_range' /etc/sysctl.conf > /tmp/sysctl.conf
+  cat <<SYSCTL | tee -a /tmp/sysctl.conf
+vm.max_map_count = 262144
+net.ipv4.ip_local_port_range = 10240  60999
+SYSCTL
+
+  cp /tmp/sysctl.conf /etc/sysctl.conf && sysctl -p
+
+# Tweak SSHD for root access
+  egrep -iv '^PermitRootlogin|^AllowUsers' /etc/ssh/sshd_config > /tmp/sshd_config
+  cat <<SSH_CONF | tee -a /tmp/sshd_config
+PermitRootlogin yes
+AllowUsers ibm root
+SSH_CONF
+
+  cp /tmp/sshd_config /etc/ssh/sshd_config
+  systemctl restart sshd
+
+# Assume that static IP was already setup (Check in /etc/network/interfaces)
+# Re-create /etc/hosts
+  cat <<NEW_ETC_HOSTS|tee /etc/hosts
+127.0.0.1  localhost.localdomain   localhost
+$HOST_IP   $SHOST.demos.demoibm.com $SHOST
+#127.0.1.1  $SHOST   $SHOST
+$MYCLUSTER_IP  mycluster.icp
+NEW_ETC_HOSTS
+
+#  PART #2 END - run as a root
