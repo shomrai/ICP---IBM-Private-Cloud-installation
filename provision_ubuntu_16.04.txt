@@ -37,10 +37,10 @@ sudo chsh -s /bin/bash ibm
   sudo apt-get -y install docker-ce
   sudo usermod -aG docker $USER
   sudo service docker restart
-
-# TEST Docker
-  sudo docker run hello-world
+  
 # Add our user to docker group
+  sudo usermod -aG docker $USER
+  
 #  su - $USER
 
 # load ICP images ~20 minutes
