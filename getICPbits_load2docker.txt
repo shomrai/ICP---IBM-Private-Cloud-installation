@@ -1,1 +1,37 @@
+# For 2018 IL - ICP BP enablement 2018
+# Provision Ubuntu Base image for Install ICP-EE 2.1.0 - written by Eitan Shomrai
+# Single node (All in one) and minimal configuration (no HA/LDAP)
+# SET=
+  USER=ibm
+  NFS_SERVER=169.47.126.115
 
+# Copy Software *** 1 H ***  ???
+  mkdir -p /opt/icp && chown -R ibm.ibm /opt/icp && cd /opt/icp
+  scp -P$PORT $USER@$NFS_SERVER:/opt/icp/* .
+  du -sh *
+
+# Read docs.docker.com/engine/installation/linux/docker-ce/ubuntu
+  apt-get update
+  apt-get -y remove docker docker-engine docker.io
+  apt-get -y install linux-image-extra-$(uname -r) linux-image-extra-virtual
+  apt -y  autoremove
+  apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  apt-get update
+
+# INSTALL
+  apt-get -y install docker-ce
+  service docker restart
+
+# load ICP images *** 1/2 H ***  ?
+  cd /opt/icp && tar xf /opt/icp/ibm-cloud-private-x86_64-2.1.0.tar.gz  -O | docker load
+# Check:
+  docker images| wc -l
+# should be 77 images
+
+# Add the $USER to the docker group and set its shell to bash
+  chsh -s /bin/bash $USER
+  usermod -aG docker $USER
+
+# END
