@@ -1,11 +1,7 @@
 # For 2018 IL - ICP BP enablement 2018
 # Provision Ubuntu Base image for Install ICP-EE 2.1.0 - written by Eitan Shomrai
 # Single node (All in one) and minimal configuration (no HA/LDAP)
-
-# Set bash
-sudo chsh -s /bin/bash ibm
-
-# SET PARAMS
+# SET=
   USER=ibm
   MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
   HOST_IP=`hostname -I|cut -d " " -f2`
@@ -14,14 +10,13 @@ sudo chsh -s /bin/bash ibm
   LHOST=`hostname -f`
   NFS_HOST=169.47.126.115
 
-# Copy Software
+
+# Copy Software *** 1 H ***
   sudo mkdir -p /opt/icp && sudo chown -R ibm.ibm /opt/icp && cd /opt/icp
   scp -P$PORT $USER@169.47.126.115:/opt/icp/* .
-#                                           DOT
   du -sh *
 
-# Install Docker CE www.ibm.com/support/knowledgecenter/SSBS6K_2.1.0/installing/install_docker.html
-# Docker CE for Ubuntu go to: docs.docker.com/engine/installation/linux/docker-ce/ubuntu
+# Read docs.docker.com/engine/installation/linux/docker-ce/ubuntu
   sudo apt-get update
   sudo apt-get -y remove docker docker-engine docker.io
   sudo apt-get -y install linux-image-extra-$(uname -r) linux-image-extra-virtual
@@ -29,28 +24,41 @@ sudo chsh -s /bin/bash ibm
   sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-# Update from new repo
   sudo apt-get update
 
-# INSTALL docker-ce:
+# INSTALL
   sudo apt-get -y install docker-ce
-  sudo usermod -aG docker $USER
   sudo service docker restart
-  
-# Add our user to docker group
-  sudo usermod -aG docker $USER
 
-# load ICP images ~20 minutes
+# load ICP images *** 1/2 H ***
   tar xf /opt/icp/ibm-cloud-private-x86_64-2.1.0.tar.gz  -O | sudo docker load
 # Check:
   sudo docker images| wc -l
-# 77 images ?
+# should be 77 images
 
-# Ubuntu installations:
+# Add the $USER to the docker group and set its shell to bash
+  sudo chsh -s /bin/bash $USER
+  sudo usermod -aG docker $USER
+
+# Ubuntu software installations for ICP
   sudo apt-get -y install ntp  openssh-server  python  python-pip
+# Ubuntu system tweaks for ICP: vm.max_map_count  and  net.ipv4.ip_local_port_range
+  sudo sysctl -w vm.max_map_count=262144
+  echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
+  sudo sysctl -w net.ipv4.ip_local_port_range="10240  60999"
+  echo "net.ipv4.ip_local_port_range=10240 60999" | sudo tee -a /etc/sysctl.conf
+  sudo sysctl -p
+# Tweak SSHD
+  egrep -iv '^PermitRootlogin|^AllowUsers' /etc/ssh/sshd_config > /tmp/sshd_config
+  cat <<SSH_CONF | tee -a /tmp/sshd_config
+PermitRootlogin yes
+AllowUsers ibm root
+SSH_CONF
+  sudo cp /tmp/sshd_config /etc/ssh/sshd_config
+  sudo systemctl restart sshd
 
-# Network setup assuming that static IP was setup in /etc/network/interfaces
-# Re-write /etc/hosts:
+# Assume that static IP was already setup (Check in /etc/network/interfaces)
+# Re-create /etc/hosts:
   cat <<NEW_ETC_HOSTS|sudo tee /etc/hosts
 127.0.0.1  localhost.localdomain   localhost
 $HOST_IP   $SHOST.demos.demoibm.com $SHOST
@@ -58,13 +66,8 @@ $HOST_IP   $SHOST.demos.demoibm.com $SHOST
 $MYCLUSTER_IP  mycluster.icp
 NEW_ETC_HOSTS
 
-# Ubuntu system tweaks
-  sudo sysctl -w vm.max_map_count=262144
-  echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
-
-  sudo sysctl -w net.ipv4.ip_local_port_range="10240  60999"
-  echo "net.ipv4.ip_local_port_range=10240 60999" | sudo tee -a /etc/sysctl.conf
-  sudo sysctl -p
+# EXIT
+exit
 
 # Setup Passwordless SSH
   rm -rf /home/ibm/.ssh  && sudo rm -rf /root/.ssh
@@ -74,16 +77,8 @@ NEW_ETC_HOSTS
   ssh -p $PORT  -t ibm@$MYCLUSTER_IP sudo mkdir -p /root/.ssh
   sudo scp -P $PORT ~/.ssh/master.id_rsa.pub ibm@$MYCLUSTER_IP:~/.ssh/master.id_rsa.pub
   ssh -p $PORT  -t ibm@$MYCLUSTER_IP  'cat ~/.ssh/master.id_rsa.pub | sudo tee -a /root/.ssh/authorized_keys'
-  egrep -iv '^PermitRootlogin|^AllowUsers' /etc/ssh/sshd_config > /tmp/sshd_config
-  cat <<SSH_CONF | tee -a /tmp/sshd_config
-PermitRootlogin yes
-AllowUsers ibm root
-SSH_CONF
-  sudo cp /tmp/sshd_config /etc/ssh/sshd_config
-  sudo systemctl restart sshd
 
 # Check passwordless root access:
   sudo ssh -p $PORT -i  ~/.ssh/master.id_rsa  $MYCLUSTER_IP id
 
 #  END ------
-
