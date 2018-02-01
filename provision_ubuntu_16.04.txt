@@ -4,8 +4,7 @@
 # Single node (All in one) and minimal configuration (no HA/LDAP)
 
 # Set bash
-#  sed 's%home/ibm:%home/ibm:/bin/bash%' /etc/passwd > /tmp/passwd
-#  sudo cp /etc/passwd /etc/passwd.old && sudo cp /tmp/passwd /etc
+sudo chsh -s /bin/bash ibm
 
 # SET PARAMS
   USER=ibm
