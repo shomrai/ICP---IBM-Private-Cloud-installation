@@ -1,11 +1,8 @@
 # For 2018 IL - ICP BP enablement 2018 - PART #3 - RUN as regular user (ibm)
 # Setup passwordless SSH for user with root access - written by Eitan Shomrai
-if [ $USER == "root" ]
-then
-  echo "Please do not run this script with sudo, but like this: sh $0"
-  exit
-fi
+if [ $USER == "root" ]; then echo "Do not run this script with sudo, but like this: sh $0"; exit; fi
 
+@ SET=
   USER=ibm
   MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
   HOST_IP=`hostname -I|cut -d " " -f2`
