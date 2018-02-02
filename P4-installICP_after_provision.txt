@@ -1,10 +1,6 @@
 # For 2018 IL - ICP BP enablement 2018 - PART #4 START
 #  ICP install steps - written by Eitan Shomrai
-if [ $USER == "root" ]
-then
-  echo "Please do not run this script with sudo, but like this: sh $0"
-  exit
-fi
+if [ $USER == "root" ]; then echo "Do not run this script with sudo, but like this: sh $0"; exit; fi
 # SET PARAMS
   USER=ibm
   PASSWD='IBMDem0s!'
