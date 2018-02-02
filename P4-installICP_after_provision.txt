@@ -10,10 +10,9 @@
   SHOST=`hostname -s`
   LHOST=`hostname -f`
   NFS_HOST=169.47.126.115
-  INSTALLDIR=/opt/ibm-cloud-private-2.1.0
+  INSTALLDIR=~
 
-# Re-set the ICP cluster data:
-  sudo rm -rf $INSTALLDIR && mkdir $INSTALLDIR  && cd $INSTALLDIR
+cd $INSTALLDIR
 
 # Extract cluster setup files
   sudo docker run -v $(pwd):/data -e LICENSE=accept ibmcom/icp-inception:2.1.0-ee cp -r cluster /data
