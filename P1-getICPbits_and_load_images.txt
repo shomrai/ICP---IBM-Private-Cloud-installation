@@ -1,11 +1,7 @@
 # For 2018 IL - ICP BP enablement 2018 - PART #1 - START  - RUN AS ROOT
 # Install ICP-EE 2.1.0 - Single node (All in one) and minimal configuration (no HA/LDAP)
 # written by Eitan Shomrai
-if [ $USER != "root" ]
-then
-  echo "Please run this script like this: sudo sh $0"
-  exit
-fi
+if [ $USER != "root" ]; then echo "Run this script with sudo, like this: sudo sh $0"; exit; fi
 # SET=
   USER=ibm
   MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
