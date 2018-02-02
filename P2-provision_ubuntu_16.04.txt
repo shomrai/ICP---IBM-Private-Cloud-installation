@@ -1,6 +1,12 @@
 # For 2018 IL - ICP BP enablement 2018 - PART #2 START - RUN AS ROOT
 # Provision Ubuntu Base image for ICP-EE 2.1.0 - written by Eitan Shomrai
 # Single node (All in one) and minimal configuration (no HA/LDAP)
+if [ $USER != "root" ]
+then
+  echo "Please run this script like this: sudo sh $0"
+  exit
+fi
+
 # SET=
   USER=ibm
   MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
