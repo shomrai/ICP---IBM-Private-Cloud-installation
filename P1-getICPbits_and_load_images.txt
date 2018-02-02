@@ -2,6 +2,7 @@
 # Load ICP-EE 2.1.0 images - written by Eitan Shomrai
 if [ $USER != "root" ]; then echo "Run this script with sudo, like this: sudo sh $0"; exit; fi
 # SET=
+  USER=ibm
   PORT=2222
   NFS_HOST=169.47.126.115
 
