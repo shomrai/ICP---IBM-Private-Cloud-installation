@@ -3,7 +3,6 @@
 # written by Eitan Shomrai
 if [ $USER != "root" ]; then echo "Run this script with sudo, like this: sudo sh $0"; exit; fi
 # SET=
-  USER=ibm
   MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
   HOST_IP=`hostname -I|cut -d " " -f2`
   PORT=2222
@@ -40,6 +39,6 @@ if [ $USER != "root" ]; then echo "Run this script with sudo, like this: sudo sh
   docker images| wc -l
 # should be 77 images
 
-# ALL SOFTWARE LOADED NOW
-
+# ALL SOFTWARE LOADED NOW. Add $USER to group
+  usermod -aG docker $USER
 #  PART #1 END - run as a root
