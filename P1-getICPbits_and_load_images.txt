@@ -1,20 +1,15 @@
 # For 2018 IL - ICP BP enablement 2018 - PART #1 - START  - RUN AS ROOT
-# Install ICP-EE 2.1.0 - Single node (All in one) and minimal configuration (no HA/LDAP)
-# written by Eitan Shomrai
+# Load ICP-EE 2.1.0 images - written by Eitan Shomrai
 if [ $USER != "root" ]; then echo "Run this script with sudo, like this: sudo sh $0"; exit; fi
 # SET=
-  MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
-  HOST_IP=`hostname -I|cut -d " " -f2`
   PORT=2222
-  SHOST=`hostname -s`
-  LHOST=`hostname -f`
   NFS_HOST=169.47.126.115
 
 # Copy Software *** 1 H ***
   mkdir -p /opt/icp && chown -R ibm.ibm /opt/icp && cd /opt/icp
 # DO IT NOW
   date
-  scp -P$PORT $USER@169.47.126.115:/opt/icp/* .
+  scp -P$PORT $USER@$NFS_HOST:/opt/icp/* .
   du -sh *
 
 # docs.docker.com/engine/installation/linux/docker-ce/ubuntu
