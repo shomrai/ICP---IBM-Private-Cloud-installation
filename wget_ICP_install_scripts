@@ -1,2 +1,4 @@
-wget https://raw.githubusercontent.com/shomrai/script/master/provision_ubuntu_16.04.txt
-wget https://raw.githubusercontent.com/shomrai/script/master/installICP_after_provision.txt
+wget https://raw.githubusercontent.com/shomrai/script/master/P1-getICPbits_and_load_images.txt
+wget https://raw.githubusercontent.com/shomrai/script/master/P2-provision_ubuntu_16.04.txt
+wget https://raw.githubusercontent.com/shomrai/script/master/P3-setupSSH.txt
+wget https://raw.githubusercontent.com/shomrai/script/master/P4-installICP_after_provision.txt
