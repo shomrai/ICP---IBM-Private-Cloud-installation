@@ -1,4 +1,17 @@
 curl -Ls https://raw.githubusercontent.com/shomrai/script/master/wget_ICP_install_scripts |  sh  && cat <<SHOW
-These are the scripts files:
+
+====================================================
+
+Find binaries pre-loaded in directory "/opt/icp"
+
+====================================================
+
+Check 77 ICP docker images by "docker images|wc -l"
+====================================================
+
+In order to install ICP run three scripts:
+sudo sh P2-provision_ubuntu_16.04.txt  (run as root)
+sudo P3-setupSSH.txt                    (run as ibm)
+P4-installICP_after_provision.txt       (run as ibm)
+
 SHOW
-echo P?*.txt
