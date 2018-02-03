@@ -2,7 +2,7 @@
 # Setup passwordless SSH for user with root access - written by Eitan Shomrai
 if [ $USER == "root" ]; then echo "Do not run this script with sudo, but like this: sh $0"; exit; fi
 
-@ SET=
+# Parameters
   USER=ibm
   MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
   HOST_IP=`hostname -I|cut -d " " -f2`
