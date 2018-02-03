@@ -1,0 +1,4 @@
+curl -Ls https://raw.githubusercontent.com/shomrai/script/master/wget_ICP_install_scripts |  sh  && cat <<SHOW
+These are the scripts files:
+SHOW
+echo P?*.txt
