@@ -1,8 +1,7 @@
 # For 2018 IL - ICP BP enablement 2018 - PART #4 START
 #  ICP install steps - written by Eitan Shomrai
-if [ $USER == "root" ]; then echo "Do not run this script with sudo, but like this: sh $0"; exit; fi
-# SET PARAMS
-  USER=ibm
+if [ $USER = "root" ]; then echo "Do not run this script with sudo, but like this: sh $0"; exit; fi
+# Parameters
   PASSWD='IBMDem0s!'
   MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
   HOST_IP=`hostname -i`
