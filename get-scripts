@@ -10,8 +10,8 @@ Check 77 ICP docker images by "docker images|wc -l"
 ====================================================
 
 In order to install ICP run three scripts:
-sudo sh P2-provision_ubuntu_16.04.txt  (run as root)
-P3-setupSSH.txt                    (run as ibm)
-P4-installICP_after_provision.txt       (run as ibm)
+sudo sh P2-provision_ubuntu_16.04.txt      (run as root)
+     sh P3-setupSSH.txt                    (run as ibm)
+     sh P4-installICP_after_provision.txt  (run as ibm)
 
 SHOW
