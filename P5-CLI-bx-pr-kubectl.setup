@@ -2,7 +2,7 @@
   tar xzf IBM_Cloud_CLI_0.6.4_amd64.tar.gz
   sudo Bluemix_CLI/install_bluemix_cli
   bx plugin install /opt/icp-linux-amd64
-  bx pr login -a https://${1}:8443 --skip-ssl-validation
+  bx pr login  -u admin -p admin -a https://${1}:8443 --skip-ssl-validation
   bx pr clusters
   bx pr cluster-config mycluster
   kubectl config current-context
