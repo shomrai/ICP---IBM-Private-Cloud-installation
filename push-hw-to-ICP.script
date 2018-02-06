@@ -1,0 +1,9 @@
+docker pull hello-world
+docker tag   hello-world mycluster.icp:8500/default/hw/latest
+docker login mycluster.icp:8500 -u admin -p admin
+docker push  mycluster.icp:8500/default/hw/latest
+docker images  --no-trunc | grep hw
+
+docker rmi mycluster.icp:8500/default/hw/latest
+docker rmi  hello-world
+
