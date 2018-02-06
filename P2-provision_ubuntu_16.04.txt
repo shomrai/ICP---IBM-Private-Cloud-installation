@@ -43,12 +43,19 @@ SSH_CONF
   systemctl restart sshd
 
 # Assume that static IP was already setup (Check in /etc/network/interfaces)
+# Cluster IP
 # Re-create /etc/hosts
   cat <<NEW_ETC_HOSTS|tee /etc/hosts
 127.0.0.1  localhost.localdomain   localhost
-$HOST_IP   $SHOST.demos.demoibm.com $SHOST
-#127.0.1.1  $SHOST   $SHOST
 $MYCLUSTER_IP  mycluster.icp
 NEW_ETC_HOSTS
+
+#  If not "MY IP" add the external IP
+if [ $MYCLUSTER_IP != "192.168.133.166" ]; then
+   #  Additional IP
+  cat <<NEW_ETC_HOSTS|tee -a /etc/hosts
+$HOST_IP   $SHOST.demos.demoibm.com $SHOST
+NEW_ETC_HOSTS
+fi
 
 #  PART #2 END - run as a root
