@@ -4,11 +4,7 @@ if [ $USER = "root" ]; then echo "Do not run this script with sudo, but like thi
 
 # Parameters
   MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
-  HOST_IP=`hostname -I|cut -d " " -f2`
   PORT=2222
-  SHOST=`hostname -s`
-  LHOST=`hostname -f`
-  NFS_HOST=169.47.126.115
 
 cat <<NOTE
 
