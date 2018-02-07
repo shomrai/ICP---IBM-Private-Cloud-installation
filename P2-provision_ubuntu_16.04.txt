@@ -18,7 +18,7 @@ if [ $USER != "root" ]; then echo "Run this script with sudo, like this: sudo sh
   usermod -aG docker $USER
 
 # Ubuntu software needed for ICP
-  apt-get -y install ntp  openssh-server  python  python-pip
+  apt-get -y install ntp  openssh-server  python  python-pip socat
 
 # Ubuntu system tweaks needed for ICP:
 # maximum memory map count and ip_local_port_range parameters
