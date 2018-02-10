@@ -16,19 +16,18 @@ cd $INSTALLDIR
 # Extract cluster setup files
   sudo docker run -v $(pwd):/data -e LICENSE=accept ibmcom/icp-inception:2.1.0-ee cp -r cluster /data
   sudo chown -R ibm.ibm cluster && cd cluster
-# ??? is it neccessary ???
+# This is skipped as needed only for backup purpose
 #  mkdir images
 #  cp /opt/icp/ibm-cloud-private-x86_64-2.1.0.tar.gz images
 
 # Configure ICP cluster: hosts, config.yaml and ssh_key files
-# Copy the private KEY to the cluster node(s):
+# Copy private KEY to cluster:
   cp -f ~/.ssh/master.id_rsa ssh_key
 
 # Test SSH again
   sudo cp -f ~/.ssh/master.id_rsa ssh_key || exit
 
   sudo ssh -p $PORT  -i  ../cluster/ssh_key root@$MYCLUSTER_IP  id
-echo "QUIZ:  What the above command does?"
 
 # hosts file
 sudo cat > hosts  <<NEW_HOSTS
