@@ -15,3 +15,6 @@ sudo sh P2-provision_ubuntu_16.04.txt      (run as root)
      sh P4-installICP_after_provision.txt  (run as ibm)
 
 SHOW
+chmod a+x P*
+
+
