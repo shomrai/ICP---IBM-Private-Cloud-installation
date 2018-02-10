@@ -1,29 +1,49 @@
 USER=ibm
 IBM_PWD=IBMDem0s!
 NC=ens33
+cd /etc/network || exit 0
 
-cat > /tmp/interfaces <<INTERFACES
+# prepare interface with dhcp to get good IP.
+cat > /tmp/interfaces.dhcp <<DHCP
 source /etc/network/interfaces.d/*
 auto lo
-iface lo inet loopback
+  iface lo inet loopback
 auto ens33
-iface ens33 inet dhcp
-INTERFACES
-# Reset interface
-echo $IBM_PWD|sudo -S cp /etc/network/interfaces /etc/network/interfaces.orig
-echo $IBM_PWD|sudo -S cp /tmp/interfaces /etc/network/interfaces
-# Get IP
+  iface ens33 inet dhcp
+DHCP
+
+# Set interface to dhcp
+echo $IBM_PWD|sudo -S cp /tmp/interfaces.dhcp interfaces
+
+# Get new IP, GW and setup static IP
 echo $IBM_PWD|sudo -S ip a fl ens33
 echo $IBM_PWD|sudo -S systemctl restart networking.service
-
-sudo systemctl disable ufw
-
 IP=`ip route get 8.8.8.8|awk '{print $NF; exit}'`
+GW=`ip route get 8.8.8.8|awk '{print $3; exit}'`
+
+cat > /tmp/interfaces.static <<STATIC
+source /etc/network/interfaces.d/*
+auto lo
+  iface lo inet loopback
+auto ens33
+iface ens33 inet static
+   address $IP
+   netmask 255.255.255.0
+   gateway $GW
+STATIC
+
+echo $IBM_PWD|sudo -S cp /tmp/interfaces.static /etc/network/interfaces
+echo $IBM_PWD|sudo -S ip a fl ens33
+echo $IBM_PWD|sudo -S systemctl restart networking.service
+echo INTERFACES:
+cat /etc/network/interfaces
+
 # HOSTS
-sed "s/192.168.133.166.*/$IP mycluster.icp/" /etc/hosts > /tmp/hosts
+sed "s/.*mycluster.icp/$IP mycluster.icp/" /etc/hosts > /tmp/hosts
 echo $IBM_PWD|sudo -S cp /etc/hosts /etc/hosts.orig
 echo $IBM_PWD|sudo -S cp /tmp/hosts /etc/hosts
+echo HOSTS:
+cat /etc/hosts
 
-ip route get 8.8.8.8
-
-
+echo $IBM_PWD|sudo -S systemctl disable ufw
+echo "IP GW : $IP   $GW "
