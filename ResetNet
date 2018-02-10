@@ -30,6 +30,9 @@ iface ens33 inet static
    address $IP
    netmask 255.255.255.0
    gateway $GW
+   dns-nameserver 8.8.8.8
+   dns-nameserver 8.8.4.4
+
 STATIC
 
 echo $IBM_PWD|sudo -S cp /tmp/interfaces.static /etc/network/interfaces
