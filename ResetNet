@@ -50,4 +50,4 @@ cat /etc/hosts
 
 echo $IBM_PWD|sudo -S systemctl disable ufw
 echo "IP GW : $IP   $GW "
-ping 8.8.8.8
+ping www.ibm.com
