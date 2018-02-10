@@ -1,0 +1,23 @@
+USER=ibm
+IBM_PWD=IBMDem0s!
+NC=ens33
+
+cat > /tmp/interfaces <<INTERFACES
+source /etc/network/interfaces.d/*
+auto lo
+iface lo inet loopback
+auto ens33
+iface ens33 inet dhcp
+INTERFACES
+# Reset interface
+echo $IBM_PWD|sudo -S cp /etc/network/interfaces /etc/network/interfaces.orig
+echo $IBM_PWD|sudo -S cp /tmp/interfaces /etc/network/interfaces
+# Get IP
+echo $IBM_PWD|sudo -S ip a fl ens33
+echo $IBM_PWD|sudo -S systemctl restart networking.service
+IP=`ip route get 8.8.8.8|awk '{print $NF; exit}'`
+# HOSTS
+sed "s/192.168.133.166.*/$IP mycluster.icp/" /etc/hosts > /tmp/hosts
+echo $IBM_PWD|sudo -S cp /etc/hosts /etc/hosts.orig
+echo $IBM_PWD|sudo -S cp /tmp/hosts /etc/hosts
+
