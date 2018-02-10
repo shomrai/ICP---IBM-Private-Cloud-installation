@@ -6,11 +6,13 @@ Find binaries pre-loaded in directory "/opt/icp"
 docker images|wc -l
 ====================================================
 To install ICP run below the three scripts as:
-sudo sh P2-provision_ubuntu_16.04.txt      (run as root)
-sh P3-setupSSH.txt
-sh P4-installICP_after_provision.txt
+sudo P2*      (run as root)
+sh P3*
+sh P4*
 SHOW
 
 chmod a+x P*
+
+docker images|wc -l
 
 
