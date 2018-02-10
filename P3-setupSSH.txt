@@ -7,9 +7,7 @@ if [ $USER = "root" ]; then echo "Do not run this script with sudo, but like thi
   PORT=2222
 
 cat <<NOTE
-
- - PLEASE ENTER the user password 6! times - needed for sudo. Sorry for it...
-
+ - Enter password when sudo asks...
 NOTE
 
 # Setup Passwordless SSH
