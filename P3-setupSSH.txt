@@ -24,11 +24,4 @@ NOTE
 # Check passwordless root access:
   sudo ssh -p $PORT -o "StrictHostKeyChecking no" -i  ~/.ssh/master.id_rsa  $MYCLUSTER_IP id
 
-cat <<QUIZ
-
-  ---> sudo ssh -p $PORT -o "StrictHostKeyChecking no" -i  ~/.ssh/master.id_rsa  $MYCLUSTER_IP id  <--- 
-QUIZ:  What the above command does?"
-
-QUIZ
-
 #  END PART #3
