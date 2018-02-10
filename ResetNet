@@ -21,3 +21,7 @@ sed "s/192.168.133.166.*/$IP mycluster.icp/" /etc/hosts > /tmp/hosts
 echo $IBM_PWD|sudo -S cp /etc/hosts /etc/hosts.orig
 echo $IBM_PWD|sudo -S cp /tmp/hosts /etc/hosts
 
+sudo systemctl disable ufw
+ip route get 8.8.8.8
+
+
