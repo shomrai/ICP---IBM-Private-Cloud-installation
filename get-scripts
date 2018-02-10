@@ -1,10 +1,8 @@
 curl -Ls https://raw.githubusercontent.com/shomrai/script/master/wget_ICP_install_scripts |  sh  && cat <<SHOW
 
-====================================================
+===============================================
 Find binaries pre-loaded in directory "/opt/icp"
-====================================================
-docker images|wc -l
-====================================================
+===============================================
 To install ICP run below the three scripts as:
 sudo P2*      (run as root)
 sh P3*
@@ -12,7 +10,7 @@ sh P4*
 SHOW
 
 chmod a+x P*
-
+echo " # of docker images 77 ?"
 docker images|wc -l
 
 
