@@ -13,9 +13,9 @@
 ################################################################################
 # Server list
 ICP_VER="2.1.0"
-ACCESS_IP=10.135.11.166
+_IP=$1
 cat <<EOF > masters.txt
-$ACCESS_IP
+$_IP
 EOF
 
 # Server connection info
