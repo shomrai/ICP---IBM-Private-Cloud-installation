@@ -4,9 +4,9 @@ Find ICP binaries in directory /opt/icp
 =======================================
 
 Install ICP by running the below commands:
-sudo P2*
-sh P3*
-sh P4*
+sudo ./P2*
+sh ./P3*
+sh ./P4*
 SHOW
 
 chmod a+x P*
