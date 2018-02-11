@@ -12,8 +12,9 @@
 ####################   I C P    C O N F I G U R A T I O N   ####################
 ################################################################################
 # Server list
+ICP_VER="2.1.0"
 ACCESS_IP=10.135.11.166
-cat <<'EOF' > masters.txt
+cat <<EOF > masters.txt
 $ACCESS_IP
 EOF
 
@@ -445,7 +446,8 @@ fi
 #filename="$(curl -sc /tmp/gcokie "${ggURL}&id=${ggID}" | grep -o '="uc-name.*</span>' | sed 's/.*">//;s/<.a> .*//')"
 filename="FILE_EXISTS"
 
-if [[ ! -f $filename ]]; then
+if [[  -f $filename ]]; then
+# ORIG: if [[ ! -f $filename ]]; then
   getcode="$(awk '/_warning_/ {print $NF}' /tmp/gcokie)"
   curl -Lb /tmp/gcokie "${ggURL}&confirm=${getcode}&id=${ggID}" -o "${filename}"
 
@@ -511,7 +513,7 @@ fi
 
 
 my_print "\nTASK [Extract default configuration] *******************************************\n"
-echo $ssh_pass | sudo -S -p '' docker run -e LICENSE=accept -v "$(pwd)":/data ibmcom/icp-inception:2.1.0.1-ee cp -r cluster /data >/dev/null &>> $log_file
+echo $ssh_pass | sudo -S -p '' docker run -e LICENSE=accept -v "$(pwd)":/data ibmcom/icp-inception:$ICP_VER-ee cp -r cluster /data >/dev/null &>> $log_file
 if [[ $? -eq 0 ]]; then
   my_print "localhost" "changed"
 else
@@ -601,12 +603,12 @@ my_print "localhost" "changed"
 
 
 my_print "\nTASK [Start ICP deployment] ****************************************************\n"
-echo $ssh_pass | sudo -S -p '' docker run --net=host -t -e LICENSE=accept -v $(pwd)/cluster:/installer/cluster ibmcom/icp-inception:2.1.0.1-ee install | tee -a $log_file
+echo $ssh_pass | sudo -S -p '' docker run --net=host -t -e LICENSE=accept -v $(pwd)/cluster:/installer/cluster ibmcom/icp-inception:$ICP_VER-ee install | tee -a $log_file
 
 
 exit 1
 
-docker run --net=host -t -e LICENSE=accept -v $(pwd)/cluster:/installer/cluster ibmcom/icp-inception:2.1.0.1-ee uninstall
+docker run --net=host -t -e LICENSE=accept -v $(pwd)/cluster:/installer/cluster ibmcom/icp-inception:$ICP_VER-ee uninstall
 echo "" > $log_file
 for x in $(cat masters.txt); do
   ssh $ssh_user@$x -p $ssh_port 'docker stop $(docker ps -a -q)' &>> $log_file
