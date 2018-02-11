@@ -1,5 +1,10 @@
 # on pre=loaded no need
 #wget --quiet https://raw.githubusercontent.com/shomrai/script/master/P1-getICPbits_and_load_images.txt
+# install scripts
 wget --quiet https://raw.githubusercontent.com/shomrai/script/master/P2-provision_ubuntu_16.04.txt
 wget --quiet https://raw.githubusercontent.com/shomrai/script/master/P3-setupSSH.txt
 wget --quiet https://raw.githubusercontent.com/shomrai/script/master/P4-installICP_after_provision.txt
+# tools
+wget --quiet https://raw.githubusercontent.com/shomrai/script/master/Reinstall-helm
+wget --quiet https://raw.githubusercontent.com/shomrai/script/master/ResetNet
+wget --quiet https://raw.githubusercontent.com/shomrai/script/master/getJenkinsPasswd
