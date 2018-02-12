@@ -5,21 +5,17 @@ if [ $USER = "root" ]; then echo "Do not run this script with sudo, but like thi
 # Parameters
   MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
   PORT=2222
+  SSH_PWD="IBMDem0s!"
 
-cat <<NOTE
- - Enter password when sudo asks...
-NOTE
+# Reset dirs
+  rm -rf ~/.ssh  ; mkdir ~/.ssh
+  echo $SSH_PWD|sudo -S rm -rf /root/.ssh ; echo $SSH_PWD|sudo -S mkdir /root/.ssh
 
-# Setup Passwordless SSH
-  rm -rf ~/.ssh && sudo rm -rf /root/.ssh
-  mkdir  ~/.ssh && sudo mkdir  /root/.ssh
-
-  ssh-keygen -q -b 4096 -t rsa -f ~/.ssh/master.id_rsa -N "" ;
-  ssh -p $PORT  -o "StrictHostKeyChecking no" -t $USER@$MYCLUSTER_IP sudo mkdir -p /root/.ssh
-  sudo scp -P $PORT  -o "StrictHostKeyChecking no" ~/.ssh/master.id_rsa.pub $USER@$MYCLUSTER_IP:~/.ssh/master.id_rsa.pub
-  ssh -p $PORT -o "StrictHostKeyChecking no" -t $USER@$MYCLUSTER_IP  'cat ~/.ssh/master.id_rsa.pub | sudo tee -a /root/.ssh/authorized_keys'
+  ssh-keygen -q -b 4096 -t rsa -f ~/.ssh/master.id_rsa -N ""
+  echo $SSH_PWD|sudo -S cp  /home/$USER/.ssh/master.id_rsa.pub /root/.ssh/master.id_rsa.pub
+  echo $SSH_PWD|sudo -S cp /home/$USER/.ssh/master.id_rsa.pub  /root/.ssh/authorized_keys
 
 # Check passwordless root access:
-  sudo ssh -p $PORT -o "StrictHostKeyChecking no" -i  ~/.ssh/master.id_rsa  $MYCLUSTER_IP id
+  sudo ssh -p $PORT -o "StrictHostKeyChecking=no" -o "LogLevel=quiet" -i ~/.ssh/master.id_rsa  $MYCLUSTER_IP id
 
 #  END PART #3
