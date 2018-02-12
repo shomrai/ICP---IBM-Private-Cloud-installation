@@ -475,3 +475,130 @@ done
 if [[ -n $bg_list ]]; then
   my_print "$bg_list" "changed"
 fi
+
+
+
+my_print "\nTASK [Load installtion file] ***************************************************\n"
+bg_list=""
+for x in $(cat masters.txt); do
+  status=$(ssh $ssh_user@$x -p $ssh_port "echo $ssh_pass | sudo -S -p '' docker images" | wc -l)
+
+  if [ $status -lt 78 ]; then
+    ssh $ssh_user@$x -p $ssh_port "tar xf $filename -O | { echo $ssh_pass; cat -; } | sudo -S -p '' docker load" &>> $log_file &
+
+    if [[ $? -eq 0 ]]; then
+      if [[ -z $bg_list ]]; then
+        bg_list="$x"
+      else
+        bg_list="$bg_list,$x"
+      fi
+    else
+      my_print "$x" "error"
+    fi
+  else
+    my_print "$x" "ok"
+  fi
+done
+if [[ -n $bg_list ]]; then
+  my_print "$bg_list" "changed"
+fi
+
+
+my_print "\nTASK [Extract default configuration] *******************************************\n"
+echo $ssh_pass | sudo -S -p '' docker run -e LICENSE=accept -v "$(pwd)":/data ibmcom/icp-inception:2.1.0.1-ee cp -r cluster /data >/dev/null &>> $log_file
+if [[ $? -eq 0 ]]; then
+  my_print "localhost" "changed"
+else
+  my_print "localhost" "error"
+fi
+echo $ssh_pass | sudo -S -p '' chown -R $ssh_user:$ssh_user cluster &>> $log_file
+
+
+my_print "\nTASK [Prepare icp hosts config] ************************************************\n"
+echo "[master]" > ./cluster/hosts
+for x in $(cat masters.txt); do
+cat >> ./cluster/hosts <<EOF
+$x:$ssh_port
+EOF
+done
+
+echo -e "\n[worker]" >> ./cluster/hosts
+for x in $(cat masters.txt); do
+cat >> ./cluster/hosts <<EOF
+$x:$ssh_port
+EOF
+done
+
+echo -e "\n[proxy]" >> ./cluster/hosts
+for x in $(cat masters.txt); do
+cat >> ./cluster/hosts <<EOF
+$x:$ssh_port
+EOF
+done
+
+echo -e "\n[management]" >> ./cluster/hosts
+for x in $(cat masters.txt); do
+cat >> ./cluster/hosts <<EOF
+$x:$ssh_port
+EOF
+done
+my_print "localhost" "changed"
+
+
+my_print "\nTASK [Prepare icp deployment config] *******************************************\n"
+if [[ $ssh_user != root ]]; then
+  #sed -i 's/.* ansible_user: .*/ansible_user: $ssh_user/' ./cluster/config.yaml
+  sed -i "s/# ansible_user: <username>/ansible_user: $ssh_user/" ./cluster/config.yaml
+  sed -i "s/# ansible_become: true/ansible_become: true/" ./cluster/config.yaml
+  sed -i "s/# ansible_become_password: <password>/ansible_become_password: $ssh_pass/" ./cluster/config.yaml
+fi
+
+sed -i "s/# loopback_dns: false/loopback_dns: true/" ./cluster/config.yaml
+
+if [[ $ha_required = true ]]; then
+  sed -i "s/# calico_ip_autodetection_method: first-found>/calico_ip_autodetection_method: interface=$eth/" ./cluster/config.yaml
+  sed -i "s/# cluster_access_ip: 0.0.0.0/cluster_access_ip: $cluster_ip/" ./cluster/config.yaml
+  sed -i "s/# vip_iface: eth0/vip_iface: $eth/" ./cluster/config.yaml
+  sed -i "s/# cluster_vip: 127.0.1.1/cluster_vip: $cluster_ip/" ./cluster/config.yaml
+  sed -i "s/# proxy_access_ip: 0.0.0.0/proxy_access_ip: $proxy_ip/" ./cluster/config.yaml
+  sed -i "s/# proxy_vip_iface: eth0/proxy_vip_iface: $eth/" ./cluster/config.yaml
+  sed -i "s/# proxy_vip: 127.0.1.1/proxy_vip: $proxy_ip/" ./cluster/config.yaml
+fi
+cat >> ./cluster/config.yaml <<EOF
+
+# Logging service configuration
+# https://master_ip:8443/kibana
+logging:
+ maxAge: 1
+ storage:
+   es:
+     size: 20Gi
+     path: /opt/ibm/cfc/logging/elasticsearch
+   ls:
+     size: 5Gi
+     path: /opt/ibm/cfc/logging/logstash
+ kibana:
+   install: true
+EOF
+my_print "localhost" "changed"
+
+
+my_print "\nTASK [Final steps before deployment] *******************************************\n"
+{
+  echo $ssh_pass | sudo -S -p '' rm -rf cluster/cfc* cluster/misc
+  echo $ssh_pass | sudo -S -p '' cp ~/.ssh/id_rsa cluster/ssh_key
+  if [[ ! -f cluster/images/$filename ]]; then
+    mkdir -p cluster/images
+    cp $filename cluster/images/
+  fi
+} &
+my_print "localhost" "changed"
+
+
+my_print "\nTASK [Start ICP deployment] ****************************************************\n"
+echo $ssh_pass | sudo -S -p '' docker run --net=host -t -e LICENSE=accept -v $(pwd)/cluster:/installer/cluster ibmcom/icp-inception:2.1.0.1-ee install | tee -a $log_file
+
+
+# nothing >/dev/null 2>&1
+# errors 2>&1 >/dev/null
+# ???? &> /dev/null
