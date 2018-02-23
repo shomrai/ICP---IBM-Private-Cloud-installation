@@ -8,7 +8,7 @@ hash -r
 curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh
 chmod 700 get_helm.sh
 ./get_helm.sh -v v2.6.0
-helm init
+helm init  --client-only
 helm version
 cat <<HELM
    Check that client and Tiller are on the same version level!
