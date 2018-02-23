@@ -2,7 +2,7 @@ cat <<HELM
   If You have ICP : www.ibm.com/support/knowledgecenter/SSBS6K_2.1.0/app_center/create_helm_cli.html
 HELM
 
-sudo rm /usr/local/bin/helm
+sudo rm -rf /usr/local/bin/helm
 sudo rm -rf ~/.helm
 hash -r
 curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh
