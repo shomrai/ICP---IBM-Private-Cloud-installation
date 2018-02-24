@@ -6,9 +6,8 @@ else
   master=$1
 fi
 
-# Then login using kubectl
-  token=""
-  while [ "$token" = "" ]
+token=""
+while [ "$token" = "" ]
   do
     token=`curl -H "Content-Type: application/x-www-form-urlencoded;charset=UTF-8" -d "grant_type=password&client_id=rp&client_secret=LDo8LTor&username=admin&password=admin&scope=openid" https://$master:8443/idprovider/v1/auth/identitytoken --insecure | grep -Po '(?<="id_token":)(.*?)(?=})' | sed 's/\(^"\|"$\)//g'`
      if [ "$token" = "" ]
@@ -18,6 +17,7 @@ fi
      fi
   done
 
+# Login using kubectl
 kubectl config set-cluster $master --server=https://10.85.3.102:8001 --insecure-skip-tls-verify=true
 kubectl config set-context $master-context --cluster=$master
 kubectl config set-credentials admin --token=$token
