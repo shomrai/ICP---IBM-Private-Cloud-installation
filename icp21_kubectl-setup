@@ -1,4 +1,6 @@
 #!/bin/bash
+# https://github.com/IBM-Cloud/ibm-cloud-developer-tools/blob/master/linux-installer/idt-installer
+# IBM Cloud Developer Tools - CLI installer script for MacOS and Linux systems
 
 if [ -z "$1" ]; then
   master="mycluster.icp"
