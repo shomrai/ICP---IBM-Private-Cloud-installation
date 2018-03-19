@@ -1,0 +1,10 @@
+# checkICp-ds
+kubectl -s http://127.0.0.1:8888 get pods --namespace=kube-system | grep icp-ds
+
+ps -ef|grep kworker|wc -l
+
+ibmdemo@icpce:~$ cat Troubleshooting 
+kubectl -s http://127.0.0.1:8888 get pods --all-namespaces
+XXX=`kubectl -s http://127.0.0.1:8888 get pods --namespace=kube-system | grep xxxx | awk '{print $1}'
+
+kubectl -s http://127.0.0.1:8888 delete pods --namespace=kube-system $XXX
