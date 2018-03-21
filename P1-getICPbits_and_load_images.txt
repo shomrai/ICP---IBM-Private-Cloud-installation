@@ -1,18 +1,17 @@
-# For 2018 IL - ICP BP enablement 2018 - PART #1 - START  - RUN AS ROOT
-# Load ICP-EE 2.1.0 images - written by Eitan Shomrai
+# P1 - START  - RUN AS ROOT
+# Get and load ICP images
 if [ $USER != "root" ]; then echo "Run this script with sudo, like this: sudo sh $0"; exit; fi
 # SET=
   USER=ibm
   PORT=2222
-  NFS_HOST=169.47.126.115
+  URL="$1"
+  
 
-# Copy Software *** 1 H ***
-  mkdir -p /opt/icp && chown -R ibm.ibm /opt/icp && cd /opt/icp
-# DO IT NOW
-  date
-  scp -P$PORT $USER@$NFS_HOST:/opt/icp/* .
+#  Get *** 1 H ***
+  wget $URL
   du -sh *
 
+# INSTALL docker-ce
 # docs.docker.com/engine/installation/linux/docker-ce/ubuntu
   apt-get update
   apt-get -y remove docker docker-engine docker.io
@@ -22,19 +21,15 @@ if [ $USER != "root" ]; then echo "Run this script with sudo, like this: sudo sh
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
   add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   apt-get update
-
-# INSTALL docker-ce
   apt-get -y install docker-ce
   service docker restart
 
-# load ICP images *** 1/2 H ***
-# DO IT NOW
-  date
-  cd /opt/icp && tar xf /opt/icp/ibm-cloud-private-x86_64-2.1.0.tar.gz  -O | docker load
+# load images *** 1/2 H ***
+  tar xf ibm-cloud-private-x86_64-2.1.*.tar.gz -O | sudo docker load
 # Check:
   docker images| wc -l
 # should be 77 images
 
-# ALL SOFTWARE LOADED NOW. Add $USER to group
+# Enable docker usage without sudo
   usermod -aG docker $USER
-#  PART #1 END - run as a root
+#  P1 END
