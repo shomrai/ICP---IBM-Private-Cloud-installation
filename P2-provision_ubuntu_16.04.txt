@@ -1,6 +1,6 @@
-# For 2018 IL - ICP BP enablement 2018 - PART #2 START - RUN AS ROOT
-# Provision Ubuntu Base image for ICP-EE 2.1.0 - written by Eitan Shomrai
-# Single node (All in one) and minimal configuration (no HA/LDAP)
+# P2 START - RUN AS ROOT
+# Provision Ubuntu Base image for ICP
+# Single node cluster
 if [ $USER != "root" ]; then echo "Run this script with sudo, like this: sudo sh $0"; exit; fi
 # SET=
   USER=ibm
@@ -9,7 +9,6 @@ if [ $USER != "root" ]; then echo "Run this script with sudo, like this: sudo sh
   PORT=2222
   SHOST=`hostname -s`
   LHOST=`hostname -f`
-  NFS_HOST=169.47.126.115
 
 # Assume that ICP images are already LOADED
 
@@ -59,4 +58,4 @@ $HOST_IP   $SHOST.demos.demoibm.com $SHOST
 NEW_ETC_HOSTS
 fi
 
-#  PART #2 END - run as a root
+# P2 END
