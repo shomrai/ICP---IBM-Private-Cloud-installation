@@ -1,5 +1,4 @@
-# For 2018 IL - ICP BP enablement 2018 - PART #4 START
-#  ICP install steps - written by Eitan Shomrai
+# P #4 START
 if [ $USER = "root" ]; then echo "Do not run this script with sudo, but like this: sh $0"; exit; fi
 # Parameters
   PASSWD='IBMDem0s!'
@@ -8,8 +7,7 @@ if [ $USER = "root" ]; then echo "Do not run this script with sudo, but like thi
   PORT=2222
   SHOST=`hostname -s`
   LHOST=`hostname -f`
-  NFS_HOST=169.47.126.115
-  INSTALLDIR=~
+  INSTALLDIR=
 
 cd $INSTALLDIR
 
@@ -78,4 +76,4 @@ cat <<NOTE
 *** INSTALL ENDED ***
 NOTE
 
-# For 2018 IL - ICP BP enablement 2018 - PART #4 END
+# P #4 END
