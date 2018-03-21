@@ -1,6 +1,7 @@
 # P #4 START
 if [ $USER = "root" ]; then echo "Do not run this script with sudo, but like this: sh $0"; exit; fi
 # Parameters
+  VER=2.1.0.2
   PASSWD='IBMDem0s!'
   MYCLUSTER_IP=`hostname -I|cut -d " " -f1`
   HOST_IP=`hostname -i`
@@ -12,7 +13,7 @@ if [ $USER = "root" ]; then echo "Do not run this script with sudo, but like thi
 cd $INSTALLDIR
 
 # Extract cluster setup files
-  sudo docker run -v $(pwd):/data -e LICENSE=accept ibmcom/icp-inception:2.1.0-ee cp -r cluster /data
+  sudo docker run -v $(pwd):/data -e LICENSE=accept ibmcom/icp-inception:${VER}-ee cp -r cluster /data
   sudo chown -R ibm.ibm cluster && cd cluster
 # This is skipped as needed only for backup purpose
 #  mkdir images
@@ -21,10 +22,8 @@ cd $INSTALLDIR
 # Configure ICP cluster: hosts, config.yaml and ssh_key files
 # Copy private KEY to cluster:
   cp -f ~/.ssh/master.id_rsa ssh_key
-
-# Test SSH again
   sudo cp -f ~/.ssh/master.id_rsa ssh_key || exit
-
+# Test SSH again
   sudo ssh -p $PORT  -i  ../cluster/ssh_key root@$MYCLUSTER_IP  id
 
 # hosts file
@@ -71,7 +70,7 @@ cat <<NOTE
 NOTE
 
 date
-sudo docker run --net=host -e LICENSE=accept -v $(pwd):/installer/cluster ibmcom/icp-inception:2.1.0-ee install
+sudo docker run --net=host -e LICENSE=accept -v $(pwd):/installer/cluster ibmcom/icp-inception:${VER}-ee install
 cat <<NOTE
 *** INSTALL ENDED ***
 NOTE
