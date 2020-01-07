@@ -1,0 +1,9 @@
+FN=$1
+echo "number of occurences of each word in the file $FN are:"
+
+egrep -o '\w+' $FN |\
+sort -u|\
+while read w ;
+ do c=`grep -cw "$w" \$FN`; echo $c \* $w;
+done |\
+sort -nr
