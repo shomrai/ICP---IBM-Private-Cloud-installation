@@ -1,0 +1,38 @@
+echo "Cut 5 charcters" 'cat Input4Cut.txt | cut -c 1-5 '
+cat Input4Cut.csv | cut -c 1-5
+
+echo "Set delimiter and get the first field"
+cat Input4Cut.csv | cut -d ',' -f 1
+
+echo "Get all lines that start with S or 5 and end with e or l at the end"
+egrep "(^S|5).+[e|l]\$" Input4Cut.csv 
+
+echo "Change case"
+cat Input4Cut.csv| tr '[a-z][A-Z]' '[A-Z][a-z]'
+
+echo "squeeze out duplications"
+cat Input4Cut.csv| tr -s '[0-9A-Za-z]'
+
+echo CONDITIONAL
+num=5
+if [ $num -lt 0 ]; then
+    echo "number is negative";
+elif [ $num -lt 10 ]; then
+    echo "number is less than 10";
+else
+    echo "number is equal or greater than 10";
+fi
+
+echo FOR LOOP
+for i in {5..10};
+do
+	echo $i;
+done
+
+echo WHILE LOOP
+i=1; MAX=10
+while [ $i -le $MAX ]
+do
+	echo "$i"
+	i=$(($i+1))
+done
