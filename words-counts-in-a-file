@@ -1,6 +1,6 @@
 FN=$1
 echo "number of occurences of each word in the file $FN are:"
-
+# Words made of all characters: egrep -o [a-zA-Z0-9_]+'
 egrep -o '\w+' $FN |\
 sort -u|\
 while read w ;
