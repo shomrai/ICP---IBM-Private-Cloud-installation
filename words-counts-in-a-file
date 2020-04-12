@@ -1,9 +1,5 @@
 FN=$1
-echo "number of occurences of each word in the file $FN are:"
-# Words made of all characters: egrep -o [a-zA-Z0-9_]+'
-egrep -o '\w+' $FN |\
-sort -u|\
-while read w ;
- do c=`grep -cw "$w" \$FN`; echo $c \* $w;
-done |\
-sort -nr
+echo "# * words in file $FN:"
+# Words made of all alphanum characters
+# egrep -o '\w+' $FN | sort -u |\
+egrep -Eo '[[:alnum:]]+' $FN | sort|uniq -c | sort -nr
